@@ -8,5 +8,5 @@ import cn.bugstack.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
  * @Description: 规则树的组合接口
  */
 public interface IDecisionTreeEngine {
-    DefaultTreeFactory.StrategyAwardData process(String UseId, Long strategyId, Integer awardId);
+    DefaultTreeFactory.StrategyAwardVO process(String UseId, Long strategyId, Integer awardId);
 }
