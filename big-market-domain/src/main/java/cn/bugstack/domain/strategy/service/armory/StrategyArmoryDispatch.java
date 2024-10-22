@@ -72,15 +72,17 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
 
     private void assembleLotteryStrategy(String key, List<StrategyAwardEntity> strategyAwardEntities) {
         // 1. 获取最小概率值
-        BigDecimal minAwardRate = strategyAwardEntities.stream()
-                .map(StrategyAwardEntity::getAwardRate)
+                //Java8 中stream api处理List;
+                // 将strategyAwardEntities列表转换为一个流（Stream），以便可以使用流式操作进行处理。
+                BigDecimal minAwardRate = strategyAwardEntities.stream()
+                .map(StrategyAwardEntity::getAwardRate)//map操作将每个StrategyAwardEntity对象转换为其awardRate属性。
                 .min(BigDecimal::compareTo)
                 .orElse(BigDecimal.ZERO);
 
         // 2. 获取概率值总和
         BigDecimal totalAwardRate = strategyAwardEntities.stream()
                 .map(StrategyAwardEntity::getAwardRate)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);//它将流中的所有元素通过指定的二元操作（在这里是 BigDecimal::add）进行累加，并返回最终的结果。如果流为空，则返回初始值。
 
         // 3. 用 1 % 0.0001 获得概率范围，百分位、千分位、万分位
         BigDecimal rateRange = totalAwardRate.divide(minAwardRate, 0, RoundingMode.CEILING);
