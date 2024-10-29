@@ -1,9 +1,7 @@
-package cn.bugstack.test.domain;
+package cn.bugstack.test.domain.strategy;
 
 import cn.bugstack.domain.strategy.service.armory.IStrategyArmory;
 import cn.bugstack.domain.strategy.service.armory.IStrategyDispatch;
-import cn.bugstack.domain.strategy.service.armory.StrategyArmoryDispatch;
-
 import cn.bugstack.infrastructure.persistent.redis.IRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -17,23 +15,20 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * @Author: Masin_Zhu
- * @Date: 2024/10/9
- * @Description: 装配测试
+ * @author Fuzhengwei bugstack.cn @小傅哥
+ * @description 策略领域测试
+ * @create 2023-12-23 11:33
  */
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StrategtArmoryTest {
+public class StrategyTest {
 
     @Resource
     private IStrategyArmory strategyArmory;
 
     @Resource
     private IStrategyDispatch strategyDispatch;
-
-    @Resource
-    private IRedisService redisService;
 
     /**
      * 策略ID；100001L、100002L 装配的时候创建策略表写入到 Redis Map 中
@@ -49,9 +44,8 @@ public class StrategtArmoryTest {
      */
     @Test
     public void test_getRandomAwardId() {
-        log.info("测试结果：{} - 奖品ID值", strategyDispatch.getRandomAwardId(100001L));
+         log.info("测试结果：{} - 奖品ID值", strategyDispatch.getRandomAwardId(100001L));
     }
-
 
     /**
      * 根据策略ID+权重值，从装配的策略中随机获取奖品ID值
@@ -63,7 +57,8 @@ public class StrategtArmoryTest {
         log.info("测试结果：{} - 6000 策略配置", strategyDispatch.getRandomAwardId(100001L, "6000:102,103,104,105,106,107,108,109"));
     }
 
-
+    @Resource
+    private IRedisService redisService;
 
     @Test
     public void test_map() {

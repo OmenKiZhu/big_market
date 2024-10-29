@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * @Author: Masin_Zhu
  * @Date: 2024/10/29
- * @Description:
+ * @Description: 抽奖活动次数配置表 持久化对象
  */
 @Data
 public class RaffleActivityCount {
