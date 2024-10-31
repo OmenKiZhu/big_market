@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * @author Fuzhengwei bugstack.cn @小傅哥
+ * @author OmenKi
  * @description 责任链工厂
- * @create 2024-03-23 10:30
+ * @create 2024-10-30 10:30
  */
 @Service
 public class DefaultActivityChainFactory {
