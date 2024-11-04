@@ -58,7 +58,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
             return userRaffleOrderEntity;
         }
 
-        // 3. 额度账户过滤&返回账户构建对象
+        // 3. 额度账户过滤&返回账户构建对象   （返回聚合的总日月账户对象）
         CreatePartakeOrderAggregate createPartakeOrderAggregate = this.doFilterAccount(userId, activityId, currentDate);
 
         // 4. 构建订单
