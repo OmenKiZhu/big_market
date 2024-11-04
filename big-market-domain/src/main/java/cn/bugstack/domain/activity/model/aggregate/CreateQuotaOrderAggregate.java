@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderAggregate {
+public class CreateQuotaOrderAggregate {
 
     /**
      * 用户ID
@@ -42,7 +42,6 @@ public class CreateOrderAggregate {
      * 增加；月次数
      */
     private Integer monthCount;
-
 
     /**
      * 活动订单实体

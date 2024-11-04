@@ -1,15 +1,11 @@
-package cn.bugstack.domain.activity.service.rule;
-
-import cn.bugstack.domain.activity.model.entity.ActivityCountEntity;
-import cn.bugstack.domain.activity.model.entity.ActivityEntity;
-import cn.bugstack.domain.activity.model.entity.ActivitySkuEntity;
+package cn.bugstack.domain.activity.service.quota.rule;
 
 /**
  * @Author: Masin_Zhu
  * @Date: 2024/10/29
  * @Description: 下单规则责任链抽象类
  */
-public abstract class AbstractActionChain implements IActionChain{
+public abstract class AbstractActionChain implements IActionChain {
 
     private IActionChain next;
 
