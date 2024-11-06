@@ -80,7 +80,7 @@ public class AwardRepository implements IAwardRepository {
                     //写入任务
                     taskDao.insert(task);
 
-                    //TODO 更新抽奖单状态 create->completed
+                    // 更新抽奖单状态 create->completed
                     int count = userRaffleOrderDao.updateUserRaffleOrderStateUsed(userRaffleOrder);
 
                     if (1 != count) {
