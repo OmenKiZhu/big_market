@@ -324,6 +324,8 @@ public class ActivityRepository implements IActivityRepository {
                 .build();
     }
 
+
+    // TODO 保存抽奖的聚合订单 这里的代码好好看看
     @Override
     public void saveCreatePartakeOrderAggregate(CreatePartakeOrderAggregate createPartakeOrderAggregate) {
         try {
@@ -336,7 +338,7 @@ public class ActivityRepository implements IActivityRepository {
 
             // 统一切换路由，以下事务内的所有操作，都走一个路由
             dbRouter.doRouter(userId);
-            transactionTemplate.execute(status -> {
+            transactionTemplate.execute(status -> { //进行事务管理
                 try {
                     // 1. 更新总账户
                     int totalCount = raffleActivityAccountDao.updateActivityAccountSubtractionQuota(
@@ -433,7 +435,8 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId) {
+    public List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId)
+    {
         List<RaffleActivitySku> raffleActivitySkus = raffleActivitySkuDao.queryActivitySkuListByActivityId(activityId);
         ArrayList<ActivitySkuEntity> ActivitySkuEntities = new ArrayList<>(raffleActivitySkus.size());
         for (RaffleActivitySku raffleActivitySku : raffleActivitySkus)
@@ -447,6 +450,16 @@ public class ActivityRepository implements IActivityRepository {
                     .build());
         }
         return ActivitySkuEntities;
+    }
+
+    @Override
+    public Integer queryRaffleActivityCountDayPartakeCount(Long activityId, String userId) {
+        RaffleActivityAccountDay raffleActivityAccountDay = new RaffleActivityAccountDay();
+        raffleActivityAccountDay.setUserId(userId);
+        raffleActivityAccountDay.setActivityId(activityId);
+        raffleActivityAccountDay.setDay(raffleActivityAccountDay.currentDay());
+        Integer dayPartakeCount = raffleActivityAccountDayDao.queryRaffleActivityCountDayPartakeCount(raffleActivityAccountDay);
+        return null == dayPartakeCount ? 0 : dayPartakeCount;
     }
 
 

@@ -55,7 +55,7 @@ public abstract class AbstractRaffleActivityPartake implements IRaffleActivityPa
         UserRaffleOrderEntity userRaffleOrderEntity = activityRepository.queryNoUsedRaffleOrder(partakeRaffleActivityEntity);
         if (null != userRaffleOrderEntity) {
             log.info("创建参与活动订单 userId:{} activityId:{} userRaffleOrderEntity:{}", userId, activityId, JSON.toJSONString(userRaffleOrderEntity));
-            return userRaffleOrderEntity;
+            return userRaffleOrderEntity; //存在未使用的 则返回未使用的订单
         }
 
         // 3. 额度账户过滤&返回账户构建对象   （返回聚合的总日月账户对象）

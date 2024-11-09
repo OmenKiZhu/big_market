@@ -7,7 +7,9 @@ package cn.bugstack.domain.activity.service.armory;
  */
 public interface IActivityArmory {
 
+    //通过sku装配
     boolean assembleActivitySku(Long sku);
 
+    //通过活动id装配
     boolean assembleActivitySkuByActivityId(Long activityId);
 }

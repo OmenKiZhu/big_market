@@ -43,11 +43,11 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
 
         // 查询月账户额度
         ActivityAccountMonthEntity activityAccountMonthEntity = activityRepository.queryActivityAccountMonthByUserId(userId, activityId, month);
-        if (null != activityAccountMonthEntity && activityAccountMonthEntity.getMonthCountSurplus() <= 0) {
+        if (null != activityAccountMonthEntity && activityAccountMonthEntity.getMonthCountSurplus() <= 0) { //存在余额账户 但是剩余额度不足 抛异常
             throw new AppException(ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getCode(), ResponseCode.ACCOUNT_MONTH_QUOTA_ERROR.getInfo());
         }
 
-        // 创建月账户额度；true = 存在月账户、false = 不存在月账户
+        // 这里是不存在余额账户的情况 首先设置状态 其次组装数据
         boolean isExistAccountMonth = null != activityAccountMonthEntity;
         if (null == activityAccountMonthEntity) {
             activityAccountMonthEntity = new ActivityAccountMonthEntity();
@@ -58,6 +58,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
             activityAccountMonthEntity.setMonthCountSurplus(activityAccountEntity.getMonthCountSurplus());
         }
 
+        // 日账户跟月账户同理
         // 查询日账户额度
         ActivityAccountDayEntity activityAccountDayEntity = activityRepository.queryActivityAccountDayByUserId(userId, activityId, day);
         if (null != activityAccountDayEntity && activityAccountDayEntity.getDayCountSurplus() <= 0) {
@@ -75,7 +76,7 @@ public class RaffleActivityPartakeService extends AbstractRaffleActivityPartake{
             activityAccountDayEntity.setDayCountSurplus(activityAccountEntity.getDayCountSurplus());
         }
 
-        // 构建对象
+        // 构建订单聚合对象
         CreatePartakeOrderAggregate createPartakeOrderAggregate = new CreatePartakeOrderAggregate();
         createPartakeOrderAggregate.setUserId(userId);
         createPartakeOrderAggregate.setActivityId(activityId);

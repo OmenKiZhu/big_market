@@ -37,29 +37,31 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
         for(StrategyAwardEntity strategyAwardEntity: strategyAwardEntities){
             Integer awardId = strategyAwardEntity.getAwardId();
             Integer awardCount = strategyAwardEntity.getAwardCount();
-            cacheStrategyAwardCount(strategyId, awardId, awardCount);
+            cacheStrategyAwardCount(strategyId, awardId, awardCount); //缓存策略id_奖品id的缓存
         }
 
 
         //3.1默认装配配置
-        assembleLotteryStrategy(String.valueOf(strategyId), strategyAwardEntities);
+        assembleLotteryStrategy(String.valueOf(strategyId), strategyAwardEntities);  //装配策略id对应的范围值 以及此id的范围查找表Map到缓存
 
         // 3.2.权重策略配置 - 适用于 rule_weight 权重规则配置
         StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
+
         String ruleWeight = strategyEntity.getRuleWeight();
+
         if (null == ruleWeight) return true;
 
         StrategyRuleEntity strategyRuleEntity = repository.queryStrategyRule(strategyId, ruleWeight);
         if (null == strategyRuleEntity) {
             throw new AppException(ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getCode(), ResponseCode.STRATEGY_RULE_WEIGHT_IS_NULL.getInfo());
         }
-        Map<String, List<Integer>> ruleWeightValueMap = strategyRuleEntity.getRuleWeightValues();
+        Map<String, List<Integer>> ruleWeightValueMap = strategyRuleEntity.getRuleWeightValues(); //对rule_weight的值进行拆分 存进map
         Set<String> keys = ruleWeightValueMap.keySet();
         for (String key : keys) {
-            List<Integer> ruleWeightValues = ruleWeightValueMap.get(key);
+            List<Integer> ruleWeightValues = ruleWeightValueMap.get(key);  //分别通过map中的key(积分值) 获取对应的权重奖品列表
             ArrayList<StrategyAwardEntity> strategyAwardEntitiesClone = new ArrayList<>(strategyAwardEntities);
-            strategyAwardEntitiesClone.removeIf(entity -> !ruleWeightValues.contains(entity.getAwardId()));
-            assembleLotteryStrategy(String.valueOf(strategyId).concat("_").concat(key), strategyAwardEntitiesClone);
+            strategyAwardEntitiesClone.removeIf(entity -> !ruleWeightValues.contains(entity.getAwardId())); //去除不需要的奖品 即此key中没有的权重奖品
+            assembleLotteryStrategy(String.valueOf(strategyId).concat("_").concat(key), strategyAwardEntitiesClone);  //对其key配置进行重新装配（去除后的权重奖品重装配），即key对应的奖品配置
         }
 
         return true;
@@ -101,19 +103,19 @@ public class StrategyArmoryDispatch implements IStrategyArmory, IStrategyDispatc
             // 计算出每个概率值需要存放到查找表的数量，循环填充
             for (int i = 0; i < rateRange.multiply(awardRate).setScale(0, RoundingMode.CEILING).intValue(); i++) {
                 strategyAwardSearchRateTables.add(awardId);
-            }
+            } //循环查找表其实就是用于随机抽奖的。 利用奖品的id进行数量上的填，从而控制抽奖上的概率，从而实现概率的随机性。
         }
 
         // 5. 对存储的奖品进行乱序操作
-        Collections.shuffle(strategyAwardSearchRateTables);
+        Collections.shuffle(strategyAwardSearchRateTables); //乱序保证随机性
 
         // 6. 生成出Map集合，key值，对应的就是后续的概率值。通过概率来获得对应的奖品ID
         Map<Integer, Integer> shuffleStrategyAwardSearchRateTable = new LinkedHashMap<>();
         for (int i = 0; i < strategyAwardSearchRateTables.size(); i++) {
             shuffleStrategyAwardSearchRateTable.put(i, strategyAwardSearchRateTables.get(i));
-        }
+        } //用Map存储策略奖品概率表------对应格式为： 序号-奖品id
 
-        // 7. 存放到 Redis
+        // 7. 存放到 Redis   存放了此StrategyId对应的范围值 以及此id的概率查找表map
         repository.storeStrategyAwardSearchRateTable(key, shuffleStrategyAwardSearchRateTable.size(), shuffleStrategyAwardSearchRateTable);
     }
 

@@ -18,10 +18,7 @@ import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,6 +69,7 @@ public class StrategyRepository implements IStrategyRepository {
                     .awardTitle(strategyAward.getAwardTitle())
                     .awardSubtitle(strategyAward.getAwardSubtitle())
                     .sort(strategyAward.getSort())
+                    .ruleModels(strategyAward.getRuleModels())
                     .build();
             strategyAwardEntities.add(strategyAwardEntity);
         }
@@ -82,10 +80,10 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public void storeStrategyAwardSearchRateTable(String key, Integer rateRange, Map<Integer, Integer> strategyAwardSearchRateTable) {
         // 1. 存储抽奖策略范围值，如10000，用于生成1000以内的随机数
-        redisService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + key, rateRange);
+        redisService.setValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY + key, rateRange); //缓存strategyId范围key-对应范围值
         // 2. 存储概率查找表
-        Map<Integer, Integer> cacheRateTable = redisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + key);
-        cacheRateTable.putAll(strategyAwardSearchRateTable);
+        Map<Integer, Integer> cacheRateTable = redisService.getMap(Constants.RedisKey.STRATEGY_RATE_TABLE_KEY + key); //设置一个此Key的map缓存
+        cacheRateTable.putAll(strategyAwardSearchRateTable); //把这个key对应的全部Map扔进来
     }
 
     @Override
@@ -126,9 +124,10 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public StrategyRuleEntity queryStrategyRule(Long strategyId, String ruleModel) {
-        StrategyRule strategyRuleReq = new StrategyRule();
+        StrategyRule strategyRuleReq = new StrategyRule(); //要操作dao层，提前封装dao层数据
         strategyRuleReq.setStrategyId(strategyId);
         strategyRuleReq.setRuleModel(ruleModel);
+
         StrategyRule strategyRuleRes = strategyRuleDao.queryStrategyRule(strategyRuleReq);
         return StrategyRuleEntity.builder()
                 .strategyId(strategyRuleRes.getStrategyId())
@@ -311,6 +310,24 @@ public class StrategyRepository implements IStrategyRepository {
         if (null == raffleActivityAccountDay) return 0;
         // 总次数 - 剩余的，等于今日参与的
         return raffleActivityAccountDay.getDayCount() - raffleActivityAccountDay.getDayCountSurplus();
+    }
+
+    @Override
+    public Map<String, Integer> queryAwardRuleLockCount(String[] treeIds) {
+        if(treeIds == null || treeIds.length == 0) return new HashMap<>();
+        List<RuleTreeNode> ruleTreeNodes = ruleTreeNodeDao.queryRuleLocks(treeIds);
+        Map<String, Integer> resultMap = new HashMap<>();
+
+        for(RuleTreeNode node : ruleTreeNodes)
+        {
+            String treeId = node.getTreeId();
+            Integer ruleValue = Integer.parseInt(node.getRuleValue());
+            resultMap.put(treeId, ruleValue);
+        }
+
+
+
+        return resultMap;
     }
 
 }

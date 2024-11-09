@@ -1,6 +1,9 @@
 package cn.bugstack.trigger.api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Fuzhengwei bugstack.cn @小傅哥
@@ -8,6 +11,9 @@ import lombok.Data;
  * @create 2024-04-13 09:29
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ActivityDrawRequestDTO {
 
     /**

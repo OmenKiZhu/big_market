@@ -16,6 +16,7 @@ public interface IStrategyArmory {
     boolean assembleLotteryStrategy(Long strategyId);
 
 
+    //实际是通过活动id查询到策略id再进行装配 终究使用的是策略id的装配方法
     boolean assembleLotteryStrategyByActivityId(Long activityId);
 
 }

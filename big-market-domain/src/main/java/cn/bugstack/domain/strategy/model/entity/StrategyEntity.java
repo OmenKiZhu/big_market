@@ -27,7 +27,7 @@ public class StrategyEntity {
 
     public String[] ruleModels() {
         if (StringUtils.isBlank(ruleModels)) return null;
-        return ruleModels.split(Constants.SPLIT);
+        return ruleModels.split(Constants.SPLIT);  //对rule_models字符串进行拆分，拆成好几个model
     }
 
     public String getRuleWeight() {

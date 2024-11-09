@@ -29,8 +29,8 @@ import java.util.Date;
  * @create 2024-04-13 09:42
  */
 @Slf4j
-@RestController()
-@CrossOrigin("${app.config.cross-origin}")
+@RestController() //@Controller 和 @ResponseBody 的组合 当你希望返回 JSON 或 XML 格式的数据时，可以使用 @ResponseBody。
+@CrossOrigin("${app.config.cross-origin}") //跨域 从application.yml读取配置 此时设置为 * 开发阶段不做限制
 @RequestMapping("/api/${app.config.api-version}/raffle/activity/")
 public class RaffleActivityController implements IRaffleActivityService {
 
@@ -49,7 +49,7 @@ public class RaffleActivityController implements IRaffleActivityService {
      * 活动装配 - 数据预热 | 把活动配置的对应的 sku 一起装配
      *
      * @param activityId 活动ID
-     * @return 装配结果
+     * @return 装配结果  装配活动  以及   策略 装配策略id对应的范围值 以及此id的范围查找表Map到缓存，以及rule_weight的重装配
      * <p>
      * 接口：<a href="http://localhost:8091/api/v1/raffle/activity/armory">/api/v1/raffle/activity/armory</a>
      * 入参：{"activityId":100001,"userId":"xiaofuge"}
@@ -63,8 +63,8 @@ public class RaffleActivityController implements IRaffleActivityService {
         try {
             log.info("活动装配，数据预热，开始 activityId:{}", activityId);
             // 1. 活动装配
-            activityArmory.assembleActivitySkuByActivityId(activityId);
-            // 2. 策略装配
+            activityArmory.assembleActivitySkuByActivityId(activityId); // 包括活动的装配和活动次数的装配
+            // 2. 策略装配 （对应的策略）
             strategyArmory.assembleLotteryStrategyByActivityId(activityId);
             Response<Boolean> response = Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())

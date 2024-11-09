@@ -41,8 +41,9 @@ public class ActivityArmory implements IActivityArmory, IActivityDispatch{
         List<ActivitySkuEntity> activitySkuEntities = activityRepository.queryActivitySkuListByActivityId(activityId);
         for(ActivitySkuEntity activitySkuEntity : activitySkuEntities)
         {
+            // 预热活动次数【查询时预热到缓存】  通过sku编号预热次数到缓存
             cacheActivitySkuStockCount(activitySkuEntity.getSku(), activitySkuEntity.getStockCount());
-            // 预热活动次数【查询时预热到缓存】
+            // 预热活动次数【查询时预热到缓存】  通过活动次数编号ID预热次数到缓存
             activityRepository.queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
         }
         // 预热活动【查询时预热到缓存】
