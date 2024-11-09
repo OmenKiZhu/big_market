@@ -28,12 +28,16 @@ public class RaffleActivityControllerTest {
     @Resource
     private IRaffleActivityService raffleActivityService;
 
+
+    //装配活动
     @Test
     public void test_armory() {
         Response<Boolean> response = raffleActivityService.armory(100301L);
         log.info("测试结果：{}", JSON.toJSONString(response));
     }
 
+
+    //活动的抽奖
     @Test
     public void test_draw() {
         ActivityDrawRequestDTO request = new ActivityDrawRequestDTO();

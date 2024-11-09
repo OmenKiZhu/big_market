@@ -21,10 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -134,6 +131,12 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
 
     @Override
     public DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Integer awardId) {
+
+        return raffleLogicTree(userId, strategyId, awardId, null);
+    }
+
+    @Override
+    public DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Integer awardId, Date endDateTime) {
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVO(strategyId, awardId);
         if(null == strategyAwardRuleModelVO){
             return DefaultTreeFactory.StrategyAwardVO.builder().awardId(awardId).build();
@@ -143,8 +146,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
             throw new RuntimeException("存在抽奖策略配置的规则模型 Key，未在库表 rule_tree、rule_tree_node、rule_tree_line 配置对应的规则树信息 " + strategyAwardRuleModelVO.getRuleModels());
         }
         IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
-        return treeEngine.process(userId,strategyId,awardId);
-
+        return treeEngine.process(userId,strategyId,awardId,endDateTime);
     }
 
     @Override
