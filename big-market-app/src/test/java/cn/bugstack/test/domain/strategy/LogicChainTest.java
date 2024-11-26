@@ -49,7 +49,7 @@ public class LogicChainTest {
 
     @Test
     public void test_LogicChain_rule_weight() {
-        // 通过反射 mock 规则中的值
+        // 通过反射 mock 规则中的值   --> 这个已经改成从数据库中查了 不通过反射了 这个可以注释掉 现在暂时先打开
         ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 4900L);
 
         ILogicChain logicChain = defaultChainFactory.openLogicChain(100001L);

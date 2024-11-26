@@ -1,7 +1,6 @@
 package cn.bugstack.infrastructure.persistent.po;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,6 +11,10 @@ import java.util.Date;
  */
 @Data
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserBehaviorRebateOrder {
 
     /** 自增ID */
@@ -28,6 +31,8 @@ public class UserBehaviorRebateOrder {
     private String rebateType;
     /** 返利配置【sku值，积分值】 */
     private String rebateConfig;
+    /** 仿重业务ID -- 外部透传，方便查询使用 */
+    private String outBusinessNo;
     /** 业务ID - 拼接的唯一值 */
     private String bizId;
     /** 创建时间 */

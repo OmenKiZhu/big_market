@@ -2,6 +2,8 @@ package cn.bugstack.trigger.api;
 
 import cn.bugstack.trigger.api.dto.ActivityDrawRequestDTO;
 import cn.bugstack.trigger.api.dto.ActivityDrawResponseDTO;
+import cn.bugstack.trigger.api.dto.UserActivityAccountRequestDTO;
+import cn.bugstack.trigger.api.dto.UserActivityAccountResponseDTO;
 import cn.bugstack.types.model.Response;
 
 /**
@@ -33,4 +35,15 @@ public interface IRaffleActivityService {
      * @return
      */
     Response<Boolean> calendarSignRebate(String userId);
+
+
+    /**
+     * 判断是否已经完成日历签到返利的接口
+     * @param userId
+     * @return
+     */
+    Response<Boolean> isCalendarSignRebate(String userId);
+
+
+    Response<UserActivityAccountResponseDTO> queryUserActivityAccount(UserActivityAccountRequestDTO request);
 }
