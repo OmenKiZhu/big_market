@@ -350,7 +350,7 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Integer queryActivityTotalUseCount(String userId, Long strategyId) {
-        Long activityId = raffleActivityDao.queryStrategyIdByActivityId(strategyId);
+        Long activityId = raffleActivityDao.queryActivityIdByStrategyId(strategyId);
         RaffleActivityAccount raffleActivityAccount = raffleActivityAccountDao.queryActivityAccountByUserId(RaffleActivityAccount.builder()
                 .activityId(activityId)
                 .userId(userId)
@@ -361,7 +361,7 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
         String cacheKey = Constants.RedisKey.STRATEGY_RULE_WEIGHT_KEY + strategyId;
-       List<RuleWeightVO> ruleWeightVOS = redisService.getValue(cacheKey);
+        List<RuleWeightVO> ruleWeightVOS = redisService.getValue(cacheKey);
         if (null != ruleWeightVOS) return ruleWeightVOS;
 
 

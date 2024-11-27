@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Fuzhengwei bugstack.cn @小傅哥
@@ -42,7 +39,7 @@ public class StrategyRuleEntity {
     public Map<String, List<Integer>> getRuleWeightValues() {
         if (!"rule_weight".equals(ruleModel)) return null;
         String[] ruleValueGroups = ruleValue.split(Constants.SPACE);
-        Map<String, List<Integer>> resultMap = new HashMap<>();
+        Map<String, List<Integer>> resultMap = new LinkedHashMap<>();
         for (String ruleValueGroup : ruleValueGroups) {
             // 检查输入是否为空
             if (ruleValueGroup == null || ruleValueGroup.isEmpty()) {
